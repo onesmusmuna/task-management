@@ -4,5 +4,7 @@ We can also add our own custom methods, which is the best way for better customi
 
 Query builder filtering based on title and description
 
-    .andWhere('(task.title LIKE :search OR task.description LIKE :search)',
-    { search:  `%${search}%` }
+```ts
+.andWhere('(task.title LIKE :search OR task.description LIKE :search)',
+{ search:  `%${search}%` }
+```
