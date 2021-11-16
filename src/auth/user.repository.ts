@@ -1,7 +1,4 @@
-import {
-  ConflictException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { genSalt, hash } from 'bcrypt';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
@@ -26,6 +23,22 @@ export class UserRepository extends Repository<User> {
       } else {
         throw new InternalServerErrorException();
       }
+    }
+  }
+
+  async validateUserPassword(authCredentialDto: AuthCredentialsDto): Promise<string> {
+    const { username, password } = authCredentialDto;
+
+    const user = await this.findOne({ username });
+
+    /**
+     * If the user exist && password is valid
+     * await must be there or else the code will NOT function as intended.
+     */
+    if (user && (await user.validatePassword(password))) {
+      return user.username;
+    } else {
+      return null;
     }
   }
 
